@@ -1,0 +1,160 @@
+create table huesped (
+  dni bigint primary key,
+  tipo_documento text not null,
+  apellido text not null,
+  nombres text not null,
+  fecha_nacimiento date not null,
+  nacionalidad text not null
+);
+
+create table contacto (
+  huesped_dni bigint primary key,
+  telefono text not null,
+  email text not null,
+  foreign key (huesped_dni) references huesped (dni)
+);
+
+create table direccion (
+  huesped_dni bigint not null,
+  calle text not null,
+  numero text not null,
+  departamento text,
+  piso text,
+  codigo_postal text not null,
+  localidad text not null,
+  provincia text not null,
+  pais text not null,
+  primary key (huesped_dni, calle, numero),
+  foreign key (huesped_dni) references huesped (dni)
+);
+
+create table reserva (
+  id_reserva bigint primary key ,
+  fecha_reserva date not null,
+  cancelada boolean not null default false
+);
+
+create table habitacion (
+  id_habitacion bigint primary key ,
+  numero text not null,
+  tipo_habitacion text not null,
+  costo int not null
+);
+
+create table estadohabitacion (
+  id bigint primary key ,
+  id_habitacion bigint not null,
+  estado text not null,
+  fecha_inicio date not null,
+  fecha_fin date,
+  foreign key (id_habitacion) references habitacion (id_habitacion)
+);
+
+alter table reserva
+add column huesped_dni bigint not null,
+add foreign key (huesped_dni) references huesped (dni);
+
+create table estadia (
+  id_estadia bigint primary key ,
+  huesped_dni bigint not null,
+  valor numeric not null,
+  foreign key (huesped_dni) references huesped (dni)
+);
+
+create table reservaHabitacion (
+  id bigint primary key ,
+  id_reserva bigint not null,
+  id_habitacion bigint not null,
+  id_estadia bigint not null,
+  fecha_ingreso date not null,
+  fecha_egreso date not null,
+  foreign key (id_reserva) references reserva (id_reserva),
+  foreign key (id_habitacion) references habitacion (id_habitacion),
+  foreign key (id_estadia) references estadia (id_estadia)
+);
+
+create table factura (
+  id_factura bigint primary key ,
+  id_estadia bigint not null,
+  tipo text not null,
+  total_facturado numeric not null,
+  fecha_generacion date not null,
+  foreign key (id_estadia) references estadia (id_estadia)
+);
+
+create table consumo (
+  codigo bigint primary key ,
+  id_estadia bigint not null,
+  tipo text not null,
+  cantidad int not null,
+  precio_unitario numeric not null,
+  foreign key (id_estadia) references estadia (id_estadia)
+);
+
+create table notaDeCredito (
+  id_notadecredito bigint primary key,
+  id_factura bigint not null,
+  fecha_generacion date not null,
+  total numeric not null,
+  foreign key (id_factura) references factura (id_factura)
+);
+
+create table responsablePago (
+  cuit bigint primary key,
+  razon_social text not null
+);
+
+alter table factura
+add column cuit bigint;
+
+alter table factura
+add foreign key (cuit) references responsablePago (cuit);
+
+alter table responsablePago
+add column tipo text not null;
+
+create table personaJuridica (
+  cuit bigint primary key,
+  telefono text,
+  direccion text,
+  foreign key (cuit) references responsablePago (cuit)
+);
+
+create table pago (
+  id_pago bigint primary key ,
+  id_factura bigint not null,
+  fecha_pago date not null,
+  total_pagado numeric not null,
+  foreign key (id_factura) references factura (id_factura)
+);
+
+create table metodoPago (
+  id_pago bigint primary key,
+  tipo text not null,
+  foreign key (id_pago) references pago (id_pago)
+);
+
+create table efectivo (
+  id_pago bigint primary key,
+  moneda text not null,
+  cotizacion numeric not null,
+  foreign key (id_pago) references metodoPago (id_pago)
+);
+
+create table tarjeta (
+  numero_tarjeta bigint primary key,
+  id_pago bigint not null,
+  tipo_tarjeta text not null,
+  fecha_vencimiento date not null,
+  cvv int not null,
+  nombre_titular text not null,
+  foreign key (id_pago) references metodoPago (id_pago)
+);
+
+create table cheque (
+  numero_cheque bigint primary key,
+  id_pago bigint not null,
+  banco_emisor text not null,
+  fecha_cobro date not null,
+  foreign key (id_pago) references metodoPago (id_pago)
+);

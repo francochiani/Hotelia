@@ -10,7 +10,7 @@ public class loginInterfaz extends JFrame {
         setTitle("Inicio de sesión");
         setSize(400, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBackground(new Color(0xfef7e9));
+        setBackground(Color.WHITE);
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         setLayout(null); // Usar layout absoluto
         setResizable(false); // Deshabilitar la opción de maximizar
@@ -18,7 +18,7 @@ public class loginInterfaz extends JFrame {
 
         //Imagen superior
         ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/logo.png")));
-        Image scaledImage = originalIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+        Image scaledImage = originalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         JLabel imageLabel = new JLabel(scaledIcon);
         imageLabel.setBounds(65, 30, 280, 250);

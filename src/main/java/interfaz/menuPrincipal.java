@@ -1,14 +1,16 @@
 package interfaz;
 
-import javax.management.remote.JMXConnectionNotification;
+import  interfaz.*;
+import interfaz.menuHuesped.buscarHuesped;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class menuPrincipal extends JFrame{
     public menuPrincipal() {
-        // Crear un JDesktopPane
         JDesktopPane desktopPane = new JDesktopPane();
+        setContentPane(desktopPane);
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(desktopPane);
         desktopPane.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
@@ -25,6 +27,15 @@ public class menuPrincipal extends JFrame{
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        /* main menu
+        |
+        |-
+        |
+        |-
+        |
+        |-
+        */
+
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuHuesped = new JMenu("Huesped");
@@ -32,7 +43,9 @@ public class menuPrincipal extends JFrame{
         JMenuItem buscarHuesped = new JMenuItem("# Buscar Huesped");//CU02 -> CU09, CU10, CU11
         buscarHuesped.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JOptionPane.showMessageDialog(null, "En desarrollo", "Información", JOptionPane.INFORMATION_MESSAGE);
+                buscarHuesped Ventana = new buscarHuesped();
+                desktopPane.add(Ventana);
+                Ventana.setVisible(true);
             }});
         menuHuesped.add(buscarHuesped);
 
@@ -91,7 +104,5 @@ public class menuPrincipal extends JFrame{
         menuBar.add(menuFacturacion);
 
         setJMenuBar(menuBar);
-
-
     }
 }
