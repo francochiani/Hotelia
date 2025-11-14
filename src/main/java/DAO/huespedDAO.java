@@ -31,8 +31,8 @@ public class huespedDAO {
             cs3.setInt(1, Huesped.getNroDocumento());
             cs3.setString(2,Huesped.getDireccion().getCalle());
             cs3.setInt(3,Huesped.getDireccion().getNumero());
-            cs3.setInt(4,0);
-            cs3.setInt(5, 0);
+            cs3.setInt(4,Huesped.getDireccion().getDepto());
+            cs3.setInt(5, Huesped.getDireccion().getPiso());
             cs3.setInt(6, Huesped.getDireccion().getCodigoPostal());
             cs3.setString(7,Huesped.getDireccion().getLocalidad());
             cs3.setString(8, Huesped.getDireccion().getProvincia());

@@ -18,8 +18,8 @@ public class huesped {
     public huesped(String apellido, String nombres, String tipoDocumento, int nroDocumento,
                    Date fechaNac, String nacionalidad,
                    long telefono, String email,
-                   String ocupacion, String posicionIVA, int cuit, boolean responsableDePago,
-                   String calle, int numero, String localidad, String provincia,
+                   String ocupacion, String posicionIVA, long cuit, boolean responsableDePago,
+                   String calle, int numero, int depto, int piso, String localidad, String provincia,
                    String pais, int codigoPostal) {
         this.apellido = apellido;
         this.nombres = nombres;
@@ -29,7 +29,7 @@ public class huesped {
         this.nacionalidad = nacionalidad;
         this.contacto = new huespedContacto(telefono, email);
         this.posicionFiscal = new huespedIVA(ocupacion, posicionIVA,cuit,responsableDePago);
-        this.direccion = new huespedDireccion(calle,numero,localidad,provincia,pais,codigoPostal);
+        this.direccion = new huespedDireccion(calle,numero,depto, piso,localidad,provincia,pais,codigoPostal);
     }
 
     public huesped(String apellido, String nombres, String tipoDocumento, int nroDocumento,

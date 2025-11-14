@@ -173,16 +173,16 @@ public class altaHuesped extends JInternalFrame {
                     gestorHuesped gestor = new gestorHuesped();
 
                     // en caso de que el CUIT esté vacío, se coloca el valor 0 para evitar valores nulos
-                    int cuitValidacion = 0;
+                    long cuitValidacion = 0;
                     if (!txtCUIT.getText().trim().isEmpty()) {
-                        cuitValidacion = Integer.parseInt(txtCUIT.getText());
+                        cuitValidacion = Long.parseLong(txtCUIT.getText());
                     }
 
                     // se solicita a gestorHuesped comenzar con el alta del huesped
                     boolean confirmacion = gestor.darDeAltaHuesped(txtApellido.getText(), txtNombre.getText(),
                             comboTipo.getSelectedItem().toString(), Integer.parseInt(txtDNI.getText()), fechaSQL, txtNacionalidad.getText(),
                             Long.parseLong(txtTelefono.getText()), txtEmail.getText(), txtOcupacion.getText(), comboIVA.getSelectedItem().toString(), cuitValidacion,
-                            false, txtCalle.getText(), Integer.parseInt(txtNumero.getText()), comboLocalidad.getSelectedItem().toString(),
+                            false, txtCalle.getText(), Integer.parseInt(txtNumero.getText()),Integer.parseInt(txtDepto.getText()),Integer.parseInt(txtPiso.getText()), comboLocalidad.getSelectedItem().toString(),
                             comboProvincia.getSelectedItem().toString(),comboPais.getSelectedItem().toString(), Integer.parseInt(txtPostal.getText()));
 
                     if (confirmacion){ // confirmacion == true si el alta fue exitoso

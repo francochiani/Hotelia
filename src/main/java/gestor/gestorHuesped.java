@@ -9,13 +9,13 @@ public class gestorHuesped {
     public boolean darDeAltaHuesped(String apellido, String nombres, String tipoDocumento, int nroDocumento,
                                      Date fechaNac, String nacionalidad,
                                      long telefono, String email,
-                                     String ocupacion, String posicionIVA, int cuit, boolean responsableDePago,
-                                     String calle, int numero, String localidad, String provincia,
+                                     String ocupacion, String posicionIVA, long cuit, boolean responsableDePago,
+                                     String calle, int numero, int depto, int piso, String localidad, String provincia,
                                      String pais, int codigoPostal){
 
         huesped huesped = new huesped(apellido, nombres, tipoDocumento, nroDocumento,
                 fechaNac, nacionalidad, telefono, email, ocupacion, posicionIVA, cuit,
-                responsableDePago, calle, numero, localidad, provincia, pais, codigoPostal);
+                responsableDePago, calle, numero, depto, piso, localidad, provincia, pais, codigoPostal);
         huespedDAO huespedDAO = new huespedDAO();
 
         huesped huespedExistente = huespedDAO.buscarporDNI(huesped.getNroDocumento());

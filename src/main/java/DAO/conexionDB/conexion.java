@@ -19,8 +19,6 @@ public class conexion {
         try{
             Class.forName("org.postgresql.Driver");
             conectar = DriverManager.getConnection(cadena,usuario,password);
-
-            JOptionPane.showMessageDialog(null, "Se conecto a la base de datos");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

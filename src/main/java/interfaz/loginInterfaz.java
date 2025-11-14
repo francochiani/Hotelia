@@ -72,7 +72,7 @@ public class loginInterfaz extends JFrame {
         loginButton.addActionListener(e -> {
             String user = userText.getText();
             String password = new String(passwordText.getPassword());
-            if (user.equals("conserje") && password.equals("conserje")) {
+            if (user.equals("conserje") && password.equals("c0ns3rj3")) {
                 menuPrincipal menu = new menuPrincipal();
                 menu.setVisible(true);
                 dispose();
