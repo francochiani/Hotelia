@@ -148,7 +148,7 @@ public class altaHuesped extends JInternalFrame {
                 String fechaTexto = txtNacimiento.getText(); // dd/MM/yyyy
                 DateTimeFormatter formatoEntrada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-                LocalDate fecha = null;
+                LocalDate fecha;
                 try {
                     fecha = LocalDate.parse(fechaTexto, formatoEntrada);
                 } catch (DateTimeParseException ex) {

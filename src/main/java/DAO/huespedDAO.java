@@ -54,7 +54,7 @@ public class huespedDAO {
 
     public huesped buscarporDNI(int DNI) {
         conexion objetoconexion = new conexion();
-        huesped resultado = null;
+        huesped resultado;
         try {
             Statement st = objetoconexion.establecerConexion().createStatement();
             String consultaHuesped = "select * from huesped where dni =" + DNI;

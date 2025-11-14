@@ -27,9 +27,9 @@ public class gestorHuesped {
             JOptionPane.showMessageDialog(null, "Ya existe un húesped con el DNI ingresado.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-    };
+    }
 
-    private void darDeBajaHuesped(){};
+    private void darDeBajaHuesped(){}
 
     private void modificarHuesped(){}
 
