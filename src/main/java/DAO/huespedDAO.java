@@ -6,8 +6,10 @@ import entidad.huesped;
 import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class huespedDAO {
+    // CU09
     public boolean guardar(huesped Huesped){
         conexion objetoconexion = new conexion();
         String consultaHuesped = "insert into huesped values (?, ?, ?, ?, ?, ?);";
@@ -52,6 +54,7 @@ public class huespedDAO {
 
     private void eliminar(){}
 
+    //CU09
     public huesped buscarporDNI(int DNI) {
         conexion objetoconexion = new conexion();
         huesped resultado;
@@ -77,7 +80,65 @@ public class huespedDAO {
         }
         return resultado;
     }
-    private ArrayList<huesped> buscarTodos(){
-        return null;
+
+    //CU02
+    public List<huesped> buscarHuesped(String apellido, String nombres, String DNI, String tipoDocumento){
+        conexion objetoconexion = new conexion();
+        List<huesped> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM huesped WHERE 1 = 1";
+        List<Object> params = new ArrayList<>();
+
+        // Filtro DNI
+        if (DNI!=null && !DNI.trim().isEmpty()) {
+            sql += " AND DNI = ?";
+            params.add(DNI);
+        }
+
+        // Filtro Nombre (LIKE para coincidencias parciales)
+        if (nombres != null && !nombres.trim().isEmpty()) {
+            sql += " AND nombres LIKE ?";
+            params.add("%" + nombres + "%");
+        }
+
+        // Filtro Apellido
+        if (apellido != null && !apellido.trim().isEmpty()) {
+            sql += " AND apellido LIKE ?";
+            params.add("%" + apellido + "%");
+        }
+
+        // Filtro Tipo Documento
+        if (tipoDocumento != null && !tipoDocumento.trim().isEmpty()) {
+            sql += " AND tipo_Documento = ?";
+            params.add(tipoDocumento);
+        }
+
+        try {
+
+            Connection conn = objetoconexion.establecerConexion();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            // Cargar parámetros
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                huesped h = new huesped();
+                h.setNroDocumento(rs.getInt("DNI"));
+                h.setApellido(rs.getString("apellido"));
+                h.setNombres(rs.getString("nombres"));
+                h.setTipoDocumento(rs.getString("tipo_Documento"));
+                lista.add(h);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return lista;
+
     }
 }

@@ -42,6 +42,8 @@ public class huesped {
         this.nacionalidad = nacionalidad;
     }
 
+    public huesped(){}
+
     // Getters y Setters
     public String getApellido() {
         return apellido;

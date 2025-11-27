@@ -1,7 +1,7 @@
 package interfaz;
 
-import  interfaz.*;
 import interfaz.menuHuesped.buscarHuesped;
+import interfaz.menuReserva.reservarHabitacion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,15 +27,6 @@ public class menuPrincipal extends JFrame{
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        /* main menu
-        |
-        |-
-        |
-        |-
-        |
-        |-
-        */
-
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuHuesped = new JMenu("Huesped");
@@ -55,7 +46,9 @@ public class menuPrincipal extends JFrame{
         JMenuItem ocuparHabitacion = new JMenuItem("# Ocupar Habitacion");// CU15 -> CU05
         reservarHabitacion.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JOptionPane.showMessageDialog(null, "En desarrollo", "Información", JOptionPane.INFORMATION_MESSAGE);
+                reservarHabitacion Ventana = new reservarHabitacion();
+                desktopPane.add(Ventana);
+                Ventana.setVisible(true);
             }});
         cancelarReserva.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){

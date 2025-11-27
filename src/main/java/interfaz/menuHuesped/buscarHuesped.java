@@ -6,7 +6,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.util.List;
 import java.util.Objects;
+import gestor.gestorHuesped;
 
 public class buscarHuesped extends JInternalFrame{
     public buscarHuesped() {
@@ -100,10 +102,6 @@ public class buscarHuesped extends JInternalFrame{
             // --- Botón Buscar (ocupa todo el ancho) ---
             btnBuscar.setAlignmentX(Component.CENTER_ALIGNMENT);
             btnBuscar.setMaximumSize(new Dimension(230, 30));
-            btnBuscar.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    JOptionPane.showMessageDialog(null, "En desarrollo", "Información", JOptionPane.INFORMATION_MESSAGE);
-                }});
             panelBotones.add(Box.createVerticalStrut(20));
             panelBotones.add(btnBuscar);
             panelBotones.add(Box.createVerticalStrut(20));
@@ -112,6 +110,7 @@ public class buscarHuesped extends JInternalFrame{
             JPanel panelInferiorBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
             panelInferiorBotones.setBackground(Color.WHITE);
 
+            //   btnBuscar.addActionListener(); mas abajo
             btnModificar.setPreferredSize(new Dimension(110, 30));
             btnModificar.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
@@ -179,5 +178,15 @@ public class buscarHuesped extends JInternalFrame{
             // Agregar a la vista principal
             add(panelIzquierdo, BorderLayout.WEST);
             add(scrollTabla, BorderLayout.CENTER);
+
+            btnBuscar.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    List<Object[]> resultado = gestorHuesped.buscarHuesped(txtApellido.getText(), txtNombres.getText(), txtNroDocumento.getText(), cmbTipoDocumento.getSelectedItem().toString());
+                    DefaultTableModel model = (DefaultTableModel) tablaHuespedes.getModel();
+                    model.setRowCount(0);
+
+                    for (Object[] fila : resultado) {
+                        model.addRow(fila);
+                }}});
         }
     }

@@ -24,5 +24,4 @@ public class conexion {
         }
         return conectar;
     }
-
 }
