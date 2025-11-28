@@ -22,6 +22,7 @@ public class altaHuesped extends JInternalFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 580);
 
+
         JPanel root = new JPanel(new BorderLayout(10, 10));
         root.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setContentPane(root);
@@ -252,10 +253,6 @@ public class altaHuesped extends JInternalFrame {
         }
     }
 
-    /**
-     * Añade una fila al panel usando GridBagLayout repartiendo TOTAL_COLUMNS entre la cantidad de campos.
-     * Cada campo recibe gridwidth = span (número entero) y weightx = span para que se escale proporcionalmente.
-     */
     private void addRow(JPanel panel, GridBagConstraints gbcBase, int rowIndex, List<Field> campos) {
         int n = campos.size();
         int base = TOTAL_COLUMNS / n;

@@ -1,7 +1,8 @@
 package interfaz;
 
-import  interfaz.*;
 import interfaz.menuHuesped.buscarHuesped;
+import interfaz.menuReserva.reservarHabitacion;
+import interfaz.menuReserva.realizarCheckIn;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.awt.event.*;
 
 public class menuPrincipal extends JFrame{
     public menuPrincipal() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logo.png")));
         JDesktopPane desktopPane = new JDesktopPane();
         setContentPane(desktopPane);
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(desktopPane);
@@ -27,15 +29,6 @@ public class menuPrincipal extends JFrame{
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        /* main menu
-        |
-        |-
-        |
-        |-
-        |
-        |-
-        */
-
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuHuesped = new JMenu("Huesped");
@@ -52,10 +45,12 @@ public class menuPrincipal extends JFrame{
         JMenu menuReserva = new JMenu("Reserva");
         JMenuItem reservarHabitacion = new JMenuItem("# Reservar Habitación"); //CU04 -> CU05
         JMenuItem cancelarReserva = new JMenuItem("Cancelar Reserva"); // CU06
-        JMenuItem ocuparHabitacion = new JMenuItem("# Ocupar Habitacion");// CU15 -> CU05
+        JMenuItem ocuparHabitacion = new JMenuItem("# Realizar Check IN");// CU15 -> CU05
         reservarHabitacion.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JOptionPane.showMessageDialog(null, "En desarrollo", "Información", JOptionPane.INFORMATION_MESSAGE);
+                reservarHabitacion Ventana = new reservarHabitacion();
+                desktopPane.add(Ventana);
+                Ventana.setVisible(true);
             }});
         cancelarReserva.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -63,7 +58,9 @@ public class menuPrincipal extends JFrame{
             }});
         ocuparHabitacion.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                JOptionPane.showMessageDialog(null, "En desarrollo", "Información", JOptionPane.INFORMATION_MESSAGE);
+                realizarCheckIn Ventana = new realizarCheckIn();
+                desktopPane.add(Ventana);
+                Ventana.setVisible(true);
             }});
         menuReserva.add(reservarHabitacion);
         menuReserva.add(cancelarReserva);
