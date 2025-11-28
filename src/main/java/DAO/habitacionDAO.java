@@ -140,27 +140,73 @@ public class habitacionDAO {
 
     public void modificarEstadoHabitacion(long idHabitacion, String estado, LocalDate inicio, LocalDate fin) {
 
-        String sql = "INSERT INTO estadohabitacion (id, id_habitacion, estado, fecha_inicio, fecha_fin) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sqlBuscar =
+                "SELECT id FROM estadohabitacion " +
+                        "WHERE id_habitacion = ? AND fecha_inicio = ? AND fecha_fin = ?";
+
+
+        String sqlInsert =
+                "INSERT INTO estadohabitacion (id, id_habitacion, estado, fecha_inicio, fecha_fin) " +
+                        "VALUES (?, ?, ?, ?, ?)";
+
+        String sqlUpdate =
+                "UPDATE estadohabitacion SET estado = ? " +
+                        "WHERE id = ?";
 
         try (Connection conn = new conexion().establecerConexion()) {
 
-            // 1) Obtener último ID
+            long idExistente = -1;
+
+            // -------------------------------------------------------
+            // 1) BUSCAR SI YA EXISTE UN REGISTRO PARA ESAS FECHAS
+            // -------------------------------------------------------
+            try (PreparedStatement psBuscar = conn.prepareStatement(sqlBuscar)) {
+
+                psBuscar.setLong(1, idHabitacion);
+                psBuscar.setDate(2, java.sql.Date.valueOf(inicio));
+                psBuscar.setDate(3, java.sql.Date.valueOf(fin));
+                try (ResultSet rs = psBuscar.executeQuery()) {
+                    if (rs.next()) {
+                        idExistente = rs.getLong("id");
+                    }
+                }
+            }
+
+            // -------------------------------------------------------
+            // 2) SI EXISTE → UPDATE
+            // -------------------------------------------------------
+            if (idExistente != -1) {
+
+                try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate)) {
+                    psUpdate.setString(1, estado);
+                    psUpdate.setLong(2, idExistente);
+                    psUpdate.executeUpdate();
+                }
+
+                return;
+            }
+
+            // -------------------------------------------------------
+            // 3) SI NO EXISTE → INSERT
+            // -------------------------------------------------------
             long nuevoId = obtenerUltimoId(conn) + 1;
 
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
 
-                ps.setLong(1, nuevoId);                     // <-- generás el ID
-                ps.setLong(2, idHabitacion);
-                ps.setString(3, estado);
-                ps.setDate(4, java.sql.Date.valueOf(inicio));
-                ps.setDate(5, java.sql.Date.valueOf(fin));
+                psInsert.setLong(1, nuevoId);
+                psInsert.setLong(2, idHabitacion);
+                psInsert.setString(3, estado);
+                psInsert.setDate(4, java.sql.Date.valueOf(inicio));
+                psInsert.setDate(5, java.sql.Date.valueOf(fin));
 
-                ps.executeUpdate();
+                psInsert.executeUpdate();
             }
+
+            System.out.println("Nuevo estado de habitación insertado (ID nuevo = " + nuevoId + ")");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

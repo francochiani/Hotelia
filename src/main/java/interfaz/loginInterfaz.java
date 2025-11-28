@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class loginInterfaz extends JFrame {  
     public loginInterfaz() {
+
         // Configuración del marco de la ventana
         setTitle("Inicio de sesión");
         setSize(400, 500);
@@ -15,6 +16,7 @@ public class loginInterfaz extends JFrame {
         setLayout(null); // Usar layout absoluto
         setResizable(false); // Deshabilitar la opción de maximizar
         setUndecorated(true); // Quitar la barra de título y los botones de ventana
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logo.png")));
 
         //Imagen superior
         ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/logo.png")));

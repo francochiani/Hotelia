@@ -22,6 +22,7 @@ public class altaHuesped extends JInternalFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 580);
 
+
         JPanel root = new JPanel(new BorderLayout(10, 10));
         root.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setContentPane(root);

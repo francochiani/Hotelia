@@ -212,7 +212,6 @@ public class reservarHabitacion extends JInternalFrame {
             gestorHabitacion gestorHabitacion = new gestorHabitacion();
 
             columnasDinamicas = gestorHabitacion.obtenerColumnas(tipo);
-            System.out.println(columnasDinamicas);
             datosTabla = gestorHabitacion.obtenerDisponibilidad(desde, hasta, tipo);
 
             cargarColumnas(columnasDinamicas);
@@ -254,10 +253,12 @@ public class reservarHabitacion extends JInternalFrame {
         ventana.setReservaFinalListener(dni -> {
 
             gestorReserva gestor = new gestorReserva();
+            gestorHabitacion gestorHabitacion = new gestorHabitacion();
 
             // Registrar reservas cuando vuelve el DNI de finalizarReserva
-            //gestor.registrarReservas(habitacionesSeleccionadas, dni);
-            System.out.println(dni);
+            gestor.registrarReservas(habitacionesSeleccionadas, dni);
+            gestorHabitacion.actualizarEstadoHabitacion(habitacionesSeleccionadas,"Reservado");
+
             JOptionPane.showMessageDialog(
                     this,
                     "Reservas registradas correctamente.",

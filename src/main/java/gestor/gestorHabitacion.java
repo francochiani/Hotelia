@@ -67,17 +67,63 @@ public class gestorHabitacion {
         return habitacionDAO.obtenerIdPorNumero(numero);
     }
 
-    public void ocuparHabitacion(){}
+    public void ocuparHabitacion(List<Object[]> reservaSeleccionada){
+        actualizarEstadoHabitacion(reservaSeleccionada,"Ocupado");
+    }
 
     private void mostrarEstado(){}
 
-    public void actualizarEstadoHabitacion(List<Object[]> datos) {
+    public void actualizarEstadoHabitacion(List<Object[]> datos,String estado) {
         habitacionDAO habitacionDAO = new habitacionDAO();
         for (Object[] fila : datos) {
             long idHabitacion = (long) fila[0];
-            LocalDate desde = (LocalDate) fila[1];
-            LocalDate hasta = (LocalDate) fila[2];
-            habitacionDAO.modificarEstadoHabitacion(idHabitacion, "reservado", desde, hasta);
+            String fechaCompleta = fila[1].toString().trim();         // ejemplo: "2025-08-01 00:00"
+            String soloFecha = fechaCompleta.substring(0, 10); // "2025-08-01"
+            LocalDate desde;
+            if (soloFecha.contains("-")) {
+                // Formato tipo "2025-08-01"
+                desde = LocalDate.parse(soloFecha);
+            } else {
+                // Formato tipo "18/07/2025"
+                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                desde = LocalDate.parse(soloFecha, f);
+            }
+
+            String fechaCompleta2 = fila[2].toString();
+            String soloFecha2 = fechaCompleta2.substring(0, 10);
+            LocalDate hasta;
+            if (soloFecha2.contains("-")) {
+                // Formato tipo "2025-08-01"
+                hasta = LocalDate.parse(soloFecha2);
+            } else {
+                // Formato tipo "18/07/2025"
+                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                hasta = LocalDate.parse(soloFecha2, f);
+            }
+
+            habitacionDAO.modificarEstadoHabitacion(idHabitacion, estado, desde, hasta);
         }
+    }
+    private LocalDate parseFecha(Object valor) {
+        if (valor == null) return null;
+
+        String fecha = valor.toString().trim();
+
+        try {
+            // FORMATO: yyyy-MM-dd
+            if (fecha.contains("-")) {
+                return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+
+            // FORMATO: dd/MM/yyyy
+            if (fecha.contains("/")) {
+                return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        throw new IllegalArgumentException("Formato de fecha desconocido: " + fecha);
     }
 }
