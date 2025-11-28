@@ -52,7 +52,6 @@ public class buscarReserva extends JInternalFrame {
 
         add(panelCentral, BorderLayout.CENTER);
 
-        // --- BOTONES MUY JUNTOS ---
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
         JButton btnBuscar = new JButton("Buscar");

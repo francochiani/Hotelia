@@ -253,10 +253,6 @@ public class altaHuesped extends JInternalFrame {
         }
     }
 
-    /**
-     * Añade una fila al panel usando GridBagLayout repartiendo TOTAL_COLUMNS entre la cantidad de campos.
-     * Cada campo recibe gridwidth = span (número entero) y weightx = span para que se escale proporcionalmente.
-     */
     private void addRow(JPanel panel, GridBagConstraints gbcBase, int rowIndex, List<Field> campos) {
         int n = campos.size();
         int base = TOTAL_COLUMNS / n;
