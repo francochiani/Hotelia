@@ -18,7 +18,7 @@ public class habitacionDAO {
         String sql = "SELECT id_habitacion, numero, tipo_habitacion FROM habitacion WHERE tipo_habitacion = ?";
 
         try (Connection conn = conexion.establecerConexion();
-             PreparedStatement ps = conn.prepareStatement(sql);) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, tipoHabitacion);
 
@@ -104,25 +104,6 @@ public class habitacionDAO {
         }
 
         return -1; // NO EXISTE
-    }
-
-    public void guardarReservaEstado(long idHabitacion, LocalDate desde, LocalDate hasta) {
-
-        String sql = "INSERT INTO estadohabitacion (id_habitacion, estado, fecha_inicio, fecha_fin) " +
-                "VALUES (?, 'reservado', ?, ?)";
-
-        try (Connection conn = new conexion().establecerConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setLong(1, idHabitacion);
-            ps.setDate(2, java.sql.Date.valueOf(desde));
-            ps.setDate(3, java.sql.Date.valueOf(hasta));
-
-            ps.executeUpdate();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
     }
 
     // Obtiene el último id usado

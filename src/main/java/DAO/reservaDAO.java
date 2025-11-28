@@ -1,6 +1,6 @@
 package DAO;
 
-import entidad.reserva;
+
 import DAO.conexionDB.conexion;
 import entidad.reservaHabitacion;
 

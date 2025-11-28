@@ -49,7 +49,7 @@ public class gestorHabitacion {
             //Por cada habitación, buscar estado para ese día
             for (int i = 0; i < habitaciones.size(); i++) {
                 String numero = habitaciones.get(i).getNumero();
-                String key = numero + "_" + actual.toString();
+                String key = numero + "_" + actual;
                 String estado = mapa.getOrDefault(key, "libre");
                 fila[i + 1] = estado;  // libre / reservado / ocupado / fuera
             }

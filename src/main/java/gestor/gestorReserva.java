@@ -1,7 +1,6 @@
 package gestor;
-import DAO.habitacionDAO;
+
 import DAO.reservaDAO;
-import entidad.reserva;
 import entidad.reservaHabitacion;
 
 import java.time.LocalDate;
@@ -37,7 +36,7 @@ public class gestorReserva {
     }
 
     public List<Object[]> buscarReserva(long DNI) {
-        List<reservaHabitacion> reservas = new ArrayList<>();
+        List<reservaHabitacion> reservas;
         reservas = reservaDAO.buscarPorHuesped(DNI);
 
         // Lista de salida convertida a Object[]
