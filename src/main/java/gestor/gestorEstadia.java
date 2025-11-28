@@ -19,6 +19,10 @@ public class gestorEstadia {
         catch (NumberFormatException e) {
             System.out.println("ERROR EN ESTADIA");
         }
-
     }
+
+    public void finalizarEstadia(long IDEstadia){}
+
+    public void agregarConsumo(){}
+
 }

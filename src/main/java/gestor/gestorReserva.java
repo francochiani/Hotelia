@@ -23,18 +23,6 @@ public class gestorReserva {
         }
     }
 
-    public static class ReservaSeleccionada {
-        public String numeroHabitacion;
-        public LocalDate desde;
-        public LocalDate hasta;
-
-        public ReservaSeleccionada(String numeroHabitacion, LocalDate desde, LocalDate hasta) {
-            this.numeroHabitacion = numeroHabitacion;
-            this.desde = desde;
-            this.hasta = hasta;
-        }
-    }
-
     public List<Object[]> buscarReserva(long DNI) {
         List<reservaHabitacion> reservas;
         reservas = reservaDAO.buscarPorHuesped(DNI);
@@ -53,7 +41,10 @@ public class gestorReserva {
 
             resultado.add(fila);
         }
-
         return resultado;
     }
+
+    public void cancelarReserva(long IDReserva){}
+
+    public void confirmarReserva(long IDReserva){}
 }

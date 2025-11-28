@@ -71,7 +71,6 @@ public class gestorHabitacion {
         actualizarEstadoHabitacion(reservaSeleccionada,"Ocupado");
     }
 
-    private void mostrarEstado(){}
 
     public void actualizarEstadoHabitacion(List<Object[]> datos,String estado) {
         habitacionDAO habitacionDAO = new habitacionDAO();
