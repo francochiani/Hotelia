@@ -15,19 +15,20 @@ public class huespedDAO {
         String consultaHuesped = "insert into huesped values (?, ?, ?, ?, ?, ?);";
         String consultaContacto = "insert into contacto values (?, ?, ?)";
         String consultaDireccion = "insert into direccion values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            CallableStatement cs = objetoconexion.establecerConexion().prepareCall(consultaHuesped);
+        try (Connection conn = objetoconexion.establecerConexion()) {
+            // Bolt ⚡ - Reusing a single database connection to reduce connection overhead
+            CallableStatement cs = conn.prepareCall(consultaHuesped);
             cs.setInt(1, Huesped.getNroDocumento());
             cs.setString(2,Huesped.getTipoDocumento());
             cs.setString(3,Huesped.getApellido());
             cs.setString(4,Huesped.getNombres());
             cs.setDate(5, (Date) Huesped.getFechaNac());
             cs.setString(6, Huesped.getNacionalidad());
-            CallableStatement cs2 = objetoconexion.establecerConexion().prepareCall(consultaContacto);
+            CallableStatement cs2 = conn.prepareCall(consultaContacto);
             cs2.setInt(1, Huesped.getNroDocumento());
             cs2.setLong(2,Huesped.getContacto().getTelefono());
             cs2.setString(3,Huesped.getContacto().getEmail());
-            CallableStatement cs3 = objetoconexion.establecerConexion().prepareCall(consultaDireccion);
+            CallableStatement cs3 = conn.prepareCall(consultaDireccion);
             cs3.setInt(1, Huesped.getNroDocumento());
             cs3.setString(2,Huesped.getDireccion().getCalle());
             cs3.setInt(3,Huesped.getDireccion().getNumero());
@@ -54,8 +55,8 @@ public class huespedDAO {
         // buscar un huesped por su DNI
         conexion objetoconexion = new conexion();
         huesped resultado;
-        try {
-            Statement st = objetoconexion.establecerConexion().createStatement();
+        try (Connection conn = objetoconexion.establecerConexion()) {
+            Statement st = conn.createStatement();
             String consultaHuesped = "select * from huesped where dni =" + DNI;
             ResultSet rs = st.executeQuery(consultaHuesped);
             if (!rs.next()) {
@@ -110,8 +111,7 @@ public class huespedDAO {
         }
         // si todos los if dan FALSE retorna todos los huespedes por la condición WHERE 1 = 1
 
-        try {
-            Connection conn = objetoconexion.establecerConexion();
+        try (Connection conn = objetoconexion.establecerConexion()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
