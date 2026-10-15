@@ -104,6 +104,14 @@ public class habitacionDAO {
     }
 
     public void modificarEstadoHabitacion(long idHabitacion, String estado, LocalDate inicio, LocalDate fin) {
+        try (Connection conn = new conexion().establecerConexion()) {
+            modificarEstadoHabitacion(conn, idHabitacion, estado, inicio, fin);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void modificarEstadoHabitacion(Connection conn, long idHabitacion, String estado, LocalDate inicio, LocalDate fin) throws SQLException {
         // modifica el estado de la habitación según el estado actual
         String sqlBuscar =
                 "SELECT id FROM estadohabitacion " +
@@ -114,46 +122,43 @@ public class habitacionDAO {
         String sqlUpdate =
                 "UPDATE estadohabitacion SET estado = ? " +
                         "WHERE id = ?";
-        try (Connection conn = new conexion().establecerConexion()) {
-            long idExistente = -1;
 
-              // ===== BUSCAR SI YA EXISTE UN REGISTRO PARA ESAS FECHAS =====
-            try (PreparedStatement psBuscar = conn.prepareStatement(sqlBuscar)) {
+        long idExistente = -1;
 
-                psBuscar.setLong(1, idHabitacion);
-                psBuscar.setDate(2, java.sql.Date.valueOf(inicio));
-                psBuscar.setDate(3, java.sql.Date.valueOf(fin));
-                try (ResultSet rs = psBuscar.executeQuery()) {
-                    if (rs.next()) {
-                        idExistente = rs.getLong("id");
-                    }
+          // ===== BUSCAR SI YA EXISTE UN REGISTRO PARA ESAS FECHAS =====
+        try (PreparedStatement psBuscar = conn.prepareStatement(sqlBuscar)) {
+
+            psBuscar.setLong(1, idHabitacion);
+            psBuscar.setDate(2, java.sql.Date.valueOf(inicio));
+            psBuscar.setDate(3, java.sql.Date.valueOf(fin));
+            try (ResultSet rs = psBuscar.executeQuery()) {
+                if (rs.next()) {
+                    idExistente = rs.getLong("id");
                 }
             }
+        }
 
-            // SI EXISTE → UPDATE
-            // la habitación esta como 'reservada' y se debe actualizar para pasar a 'ocupada'
-            if (idExistente != -1) {
-                try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate)) {
-                    psUpdate.setString(1, estado);
-                    psUpdate.setLong(2, idExistente);
-                    psUpdate.executeUpdate();
-                }
-                return;
+        // SI EXISTE → UPDATE
+        // la habitación esta como 'reservada' y se debe actualizar para pasar a 'ocupada'
+        if (idExistente != -1) {
+            try (PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate)) {
+                psUpdate.setString(1, estado);
+                psUpdate.setLong(2, idExistente);
+                psUpdate.executeUpdate();
             }
+            return;
+        }
 
-            // SI NO EXISTE → INSERT
-            // agregar una habitación como 'reservada'
-            long nuevoId = obtenerUltimoId(conn) + 1;
-            try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
-                psInsert.setLong(1, nuevoId);
-                psInsert.setLong(2, idHabitacion);
-                psInsert.setString(3, estado);
-                psInsert.setDate(4, java.sql.Date.valueOf(inicio));
-                psInsert.setDate(5, java.sql.Date.valueOf(fin));
-                psInsert.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        // SI NO EXISTE → INSERT
+        // agregar una habitación como 'reservada'
+        long nuevoId = obtenerUltimoId(conn) + 1;
+        try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
+            psInsert.setLong(1, nuevoId);
+            psInsert.setLong(2, idHabitacion);
+            psInsert.setString(3, estado);
+            psInsert.setDate(4, java.sql.Date.valueOf(inicio));
+            psInsert.setDate(5, java.sql.Date.valueOf(fin));
+            psInsert.executeUpdate();
         }
     }
 }
