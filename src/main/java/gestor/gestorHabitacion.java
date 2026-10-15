@@ -7,11 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import DAO.conexionDB.conexion;
 import DAO.habitacionDAO;
 import entidad.estadoHabitacion;
 import entidad.habitacion;
 
 public class gestorHabitacion {
+    private static final DateTimeFormatter FORMATTER_DD_MM_YYYY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATTER_YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     // pedirle al DAO todas las habitaciones que sean del tipo, para poner las columnas de las tablas
     public List<String> obtenerColumnas(String tipo){
@@ -44,8 +47,7 @@ public class gestorHabitacion {
         LocalDate actual = desde;
         while (!actual.isAfter(hasta)) {
             Object[] fila = new Object[habitaciones.size() + 1];
-            DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            fila[0] = actual.format(f);
+            fila[0] = actual.format(FORMATTER_DD_MM_YYYY);
             //Por cada habitación, buscar estado para ese día
             for (int i = 0; i < habitaciones.size(); i++) {
                 String numero = habitaciones.get(i).getNumero();
@@ -74,33 +76,39 @@ public class gestorHabitacion {
 
     public void actualizarEstadoHabitacion(List<Object[]> datos,String estado) {
         habitacionDAO habitacionDAO = new habitacionDAO();
-        for (Object[] fila : datos) {
-            long idHabitacion = (long) fila[0];
-            String fechaCompleta = fila[1].toString().trim();         // ejemplo: "2025-08-01 00:00"
-            String soloFecha = fechaCompleta.substring(0, 10); // "2025-08-01"
-            LocalDate desde;
-            if (soloFecha.contains("-")) {
-                // Formato tipo "2025-08-01"
-                desde = LocalDate.parse(soloFecha);
-            } else {
-                // Formato tipo "18/07/2025"
-                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                desde = LocalDate.parse(soloFecha, f);
-            }
+        try (java.sql.Connection conn = new conexion().establecerConexion()) {
+            for (Object[] fila : datos) {
+                try {
+                    long idHabitacion = (long) fila[0];
+                    String fechaCompleta = fila[1].toString().trim();         // ejemplo: "2025-08-01 00:00"
+                    String soloFecha = fechaCompleta.substring(0, 10); // "2025-08-01"
+                    LocalDate desde;
+                    if (soloFecha.contains("-")) {
+                        // Formato tipo "2025-08-01"
+                        desde = LocalDate.parse(soloFecha);
+                    } else {
+                        // Formato tipo "18/07/2025"
+                        desde = LocalDate.parse(soloFecha, FORMATTER_DD_MM_YYYY);
+                    }
 
-            String fechaCompleta2 = fila[2].toString();
-            String soloFecha2 = fechaCompleta2.substring(0, 10);
-            LocalDate hasta;
-            if (soloFecha2.contains("-")) {
-                // Formato tipo "2025-08-01"
-                hasta = LocalDate.parse(soloFecha2);
-            } else {
-                // Formato tipo "18/07/2025"
-                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                hasta = LocalDate.parse(soloFecha2, f);
-            }
+                    String fechaCompleta2 = fila[2].toString();
+                    String soloFecha2 = fechaCompleta2.substring(0, 10);
+                    LocalDate hasta;
+                    if (soloFecha2.contains("-")) {
+                        // Formato tipo "2025-08-01"
+                        hasta = LocalDate.parse(soloFecha2);
+                    } else {
+                        // Formato tipo "18/07/2025"
+                        hasta = LocalDate.parse(soloFecha2, FORMATTER_DD_MM_YYYY);
+                    }
 
-            habitacionDAO.modificarEstadoHabitacion(idHabitacion, estado, desde, hasta);
+                    habitacionDAO.modificarEstadoHabitacion(conn, idHabitacion, estado, desde, hasta);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private LocalDate parseFecha(Object valor) {
@@ -111,12 +119,12 @@ public class gestorHabitacion {
         try {
             // FORMATO: yyyy-MM-dd
             if (fecha.contains("-")) {
-                return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                return LocalDate.parse(fecha, FORMATTER_YYYY_MM_DD);
             }
 
             // FORMATO: dd/MM/yyyy
             if (fecha.contains("/")) {
-                return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                return LocalDate.parse(fecha, FORMATTER_DD_MM_YYYY);
             }
 
         } catch (Exception e) {

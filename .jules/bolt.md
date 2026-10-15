@@ -1,0 +1,3 @@
+## 2026-10-15 - [Prevent N+1 Database Connections]
+**Learning:** The application uses a custom `DAO.conexionDB.conexion` that does not employ connection pooling natively. By default, iterating over database operations in a loop (e.g. `gestorHabitacion.actualizarEstadoHabitacion` calling `habitacionDAO.modificarEstadoHabitacion`) opens and closes a new database connection for each row.
+**Action:** Always look for loops performing DB operations. Refactor the DAOs to accept an existing `java.sql.Connection` object, and initialize the connection outside the loop using `try-with-resources` to dramatically reduce network latency and DB load.
