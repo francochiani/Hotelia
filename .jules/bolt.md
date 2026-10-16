@@ -1,0 +1,3 @@
+## 2023-10-16 - Prevent N+1 Database Connections in Bulk Operations
+**Learning:** The codebase's custom connection manager (`conexion.establecerConexion()`) creates a new connection for every call. Operations that loop over items and call a DAO method per item (like `gestorHabitacion.actualizarEstadoHabitacion`) suffer from significant N+1 connection overhead.
+**Action:** Refactor DAO methods to optionally accept an existing `java.sql.Connection` parameter. Establish a single connection in the business logic (gestor), wrap it in a `try-with-resources` block, and pass it to the DAO inside the loop to reuse the connection.
