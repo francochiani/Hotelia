@@ -1,0 +1,3 @@
+## 2024-05-18 - N+1 DB Connection Pattern
+**Learning:** The codebase uses a custom JDBC connection manager (`DAO.conexionDB.conexion`) that creates a new database connection on every call to `establecerConexion()`. Using DAOs that create connections inside loop constructs in higher level services creates an N+1 connection creation overhead which is a performance bottleneck.
+**Action:** Overload DAO methods that execute statements to accept an existing `java.sql.Connection` object, allowing the caller in higher level services like `gestor` to manage the connection life cycle across multiple calls in a loop.

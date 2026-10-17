@@ -10,6 +10,8 @@ import java.util.Map;
 import DAO.habitacionDAO;
 import entidad.estadoHabitacion;
 import entidad.habitacion;
+import java.sql.Connection;
+import DAO.conexionDB.conexion;
 
 public class gestorHabitacion {
 
@@ -74,33 +76,38 @@ public class gestorHabitacion {
 
     public void actualizarEstadoHabitacion(List<Object[]> datos,String estado) {
         habitacionDAO habitacionDAO = new habitacionDAO();
-        for (Object[] fila : datos) {
-            long idHabitacion = (long) fila[0];
-            String fechaCompleta = fila[1].toString().trim();         // ejemplo: "2025-08-01 00:00"
-            String soloFecha = fechaCompleta.substring(0, 10); // "2025-08-01"
-            LocalDate desde;
-            if (soloFecha.contains("-")) {
-                // Formato tipo "2025-08-01"
-                desde = LocalDate.parse(soloFecha);
-            } else {
-                // Formato tipo "18/07/2025"
-                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                desde = LocalDate.parse(soloFecha, f);
-            }
+        try (Connection conn = new conexion().establecerConexion()) {
+            for (Object[] fila : datos) {
+                long idHabitacion = (long) fila[0];
+                String fechaCompleta = fila[1].toString().trim();         // ejemplo: "2025-08-01 00:00"
+                String soloFecha = fechaCompleta.substring(0, 10); // "2025-08-01"
+                LocalDate desde;
+                if (soloFecha.contains("-")) {
+                    // Formato tipo "2025-08-01"
+                    desde = LocalDate.parse(soloFecha);
+                } else {
+                    // Formato tipo "18/07/2025"
+                    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    desde = LocalDate.parse(soloFecha, f);
+                }
 
-            String fechaCompleta2 = fila[2].toString();
-            String soloFecha2 = fechaCompleta2.substring(0, 10);
-            LocalDate hasta;
-            if (soloFecha2.contains("-")) {
-                // Formato tipo "2025-08-01"
-                hasta = LocalDate.parse(soloFecha2);
-            } else {
-                // Formato tipo "18/07/2025"
-                DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                hasta = LocalDate.parse(soloFecha2, f);
-            }
+                String fechaCompleta2 = fila[2].toString();
+                String soloFecha2 = fechaCompleta2.substring(0, 10);
+                LocalDate hasta;
+                if (soloFecha2.contains("-")) {
+                    // Formato tipo "2025-08-01"
+                    hasta = LocalDate.parse(soloFecha2);
+                } else {
+                    // Formato tipo "18/07/2025"
+                    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    hasta = LocalDate.parse(soloFecha2, f);
+                }
 
-            habitacionDAO.modificarEstadoHabitacion(idHabitacion, estado, desde, hasta);
+                // Bolt Optimization: Pass a single connection to eliminate N+1 DB connection overhead
+                habitacionDAO.modificarEstadoHabitacion(conn, idHabitacion, estado, desde, hasta);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private LocalDate parseFecha(Object valor) {

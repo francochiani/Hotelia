@@ -104,6 +104,16 @@ public class habitacionDAO {
     }
 
     public void modificarEstadoHabitacion(long idHabitacion, String estado, LocalDate inicio, LocalDate fin) {
+        try (Connection conn = new conexion().establecerConexion()) {
+            modificarEstadoHabitacion(conn, idHabitacion, estado, inicio, fin);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Bolt Optimization: Overloaded method that accepts an existing Connection object
+    // to prevent N+1 connection creation overhead when called in a loop.
+    public void modificarEstadoHabitacion(Connection conn, long idHabitacion, String estado, LocalDate inicio, LocalDate fin) {
         // modifica el estado de la habitación según el estado actual
         String sqlBuscar =
                 "SELECT id FROM estadohabitacion " +
@@ -114,7 +124,7 @@ public class habitacionDAO {
         String sqlUpdate =
                 "UPDATE estadohabitacion SET estado = ? " +
                         "WHERE id = ?";
-        try (Connection conn = new conexion().establecerConexion()) {
+        try {
             long idExistente = -1;
 
               // ===== BUSCAR SI YA EXISTE UN REGISTRO PARA ESAS FECHAS =====

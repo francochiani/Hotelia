@@ -11,12 +11,21 @@ import java.util.List;
 
 public class reservaDAO {
     public void guardar(long habitacion, long dni, LocalDate desde, LocalDate hasta) {
+        try (Connection conn = new conexion().establecerConexion()) {
+            guardar(conn, habitacion, dni, desde, hasta);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Bolt Optimization: Overloaded method that accepts an existing Connection object
+    // to prevent N+1 connection creation overhead when called in a loop.
+    public void guardar(Connection conn, long habitacion, long dni, LocalDate desde, LocalDate hasta) {
         // crea una nueva reserva y reservaHabitacion en la base de datos
         String sqlReserva = "INSERT INTO reserva (huesped_dni, fecha_reserva, cancelada) VALUES (?, ?, false)";
         String sqlReservaHab = "INSERT INTO reservaHabitacion (id_reserva, id_habitacion, id_estadia, fecha_ingreso, fecha_egreso) VALUES (?, ?, NULL, ?, ?)";
 
-        try (Connection conn = new conexion().establecerConexion();
-             PreparedStatement psReserva = conn.prepareStatement(sqlReserva, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement psReserva = conn.prepareStatement(sqlReserva, Statement.RETURN_GENERATED_KEYS)) {
             // ===== INSERT EN TABLA reserva =====
             psReserva.setLong(1, dni);
             psReserva.setDate(2, Date.valueOf(desde));
