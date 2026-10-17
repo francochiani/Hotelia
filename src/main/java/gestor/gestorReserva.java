@@ -2,6 +2,8 @@ package gestor;
 
 import DAO.reservaDAO;
 import entidad.reservaHabitacion;
+import java.sql.Connection;
+import DAO.conexionDB.conexion;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,12 +16,17 @@ public class gestorReserva {
 
     public void registrarReservas(List<Object[]> datos, long DNI) {
         reservaDAO reservaDAO = new reservaDAO();
-        for (Object[] fila : datos) {
-            long idHabitacion = (long) fila[0];
-            LocalDate desde = (LocalDate) fila[1];
-            LocalDate hasta = (LocalDate) fila[2];
-            Long huespedDni = this.DNI;
-            reservaDAO.guardar(idHabitacion, DNI, desde, hasta);
+        try (Connection conn = new conexion().establecerConexion()) {
+            for (Object[] fila : datos) {
+                long idHabitacion = (long) fila[0];
+                LocalDate desde = (LocalDate) fila[1];
+                LocalDate hasta = (LocalDate) fila[2];
+                Long huespedDni = this.DNI;
+                // Bolt Optimization: Pass single DB Connection to eliminate N+1 overhead
+                reservaDAO.guardar(conn, idHabitacion, DNI, desde, hasta);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
